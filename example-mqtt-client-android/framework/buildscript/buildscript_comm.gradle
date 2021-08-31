@@ -1,0 +1,53 @@
+import top.j3dream.buildsrc.Dependencies
+import top.j3dream.buildsrc.Plugins
+import top.j3dream.buildsrc.constant.Constant
+
+// warning: 请注意该模块需要在 AUltraPlugins.moduleApplication 或 AUltraPlugins.moduleLibrary 引入后才可以引入使用
+apply plugin: Plugins.kotlinAndroid
+apply plugin: Plugins.kotlinKapt
+
+android {
+    compileSdk Constant.MODULE_DEF_COMPILE_SDK_VERSION
+
+    defaultConfig {
+        minSdk Constant.MODULE_DEF_MIN_SDK_VERSION
+        targetSdk Constant.MODULE_DEF_TARGET_SDK_VERSION
+
+        testInstrumentationRunner Constant.MODULE_DEF_TEST_INSTRUMENTATION_RUNNER
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // build Feature
+    buildFeatures {
+        // open view Binding feature
+        viewBinding true
+    }
+
+    // java compile options
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    // kotlin compile options
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+dependencies {
+
+    testImplementation Dependencies.Testing.Junit
+    androidTestImplementation Dependencies.Testing.TestEspresso
+    androidTestImplementation Dependencies.Testing.TestExtJunit
+}

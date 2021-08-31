@@ -1,0 +1,25 @@
+import top.j3dream.buildsrc.BuildConfig
+import top.j3dream.buildsrc.Dependencies
+
+apply from: fetchBuildScriptAbsolutePath("buildscript_application.gradle")
+
+// 获取模块信息
+def moduleInfo = BuildConfig.APP_EXAMPLE
+
+android {
+
+    defaultConfig {
+        // 项目的基础配置信息
+        applicationId moduleInfo.appId
+        versionCode moduleInfo.versionCode
+        versionName moduleInfo.versionName
+    }
+}
+
+dependencies {
+    // AndroidX
+    implementation Dependencies.AndroidX.ConstraintLayout
+    implementation Dependencies.AndroidX.LegacySupportV4
+    // MQTT
+    implementation Dependencies.Network.MQTT
+}
