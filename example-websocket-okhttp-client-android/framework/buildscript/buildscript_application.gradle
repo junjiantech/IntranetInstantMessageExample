@@ -1,0 +1,13 @@
+import top.j3dream.buildsrc.Plugins
+import top.j3dream.buildsrc.Dependencies
+
+apply plugin: Plugins.moduleApplication
+// 注意引入顺序
+apply from: fetchBuildScriptAbsolutePath("buildscript_comm.gradle")
+
+dependencies {
+
+    // TODO 在 application 模块中默认引入了两个包. 该包可以随时被清楚
+    implementation Dependencies.AndroidX.CoreKtx
+    implementation Dependencies.AndroidX.AppCompat
+}

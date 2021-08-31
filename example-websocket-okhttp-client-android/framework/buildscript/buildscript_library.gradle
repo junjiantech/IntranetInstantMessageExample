@@ -1,0 +1,10 @@
+import top.j3dream.buildsrc.Plugins
+
+apply plugin: Plugins.moduleLibrary
+// 注意引入顺序
+apply from: fetchBuildScriptAbsolutePath("buildscript_comm.gradle")
+
+dependencies {
+
+    // empty dependencies
+}

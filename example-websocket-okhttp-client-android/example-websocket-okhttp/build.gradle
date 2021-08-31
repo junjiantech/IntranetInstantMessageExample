@@ -1,0 +1,22 @@
+import top.j3dream.buildsrc.BuildConfig
+import top.j3dream.buildsrc.Dependencies
+apply from: fetchBuildScriptAbsolutePath("buildscript_application.gradle")
+
+android {
+
+    defaultConfig {
+        def moduleInfo = BuildConfig.APP_EXAMPLE
+        // set Application Id
+        applicationId moduleInfo.appId
+        // set Application Version Info
+        versionCode moduleInfo.versionCode
+        versionName moduleInfo.versionName
+    }
+}
+
+dependencies {
+    // material.
+    implementation Dependencies.Google.Material
+    // okhttp
+    implementation Dependencies.Network.OkHttp
+}

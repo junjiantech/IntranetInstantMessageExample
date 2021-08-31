@@ -1,0 +1,28 @@
+import top.j3dream.buildsrc.Plugins
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        def plugin = Plugins.ProjectPlugins
+
+        classpath plugin.AGP
+        classpath plugin.Kotlin
+    }
+}
+
+/**
+ * 获取编译脚本的全路径
+ * @param buildScriptFilename scriptFileName
+ * @return 编译脚本的全路径
+ */
+ext.fetchBuildScriptAbsolutePath = { buildScriptFilename ->
+    def buildScriptAbsolutePathTemplate = "%s/framework/buildscript/%s"
+    return String.format(buildScriptAbsolutePathTemplate, rootProject.rootDir.absolutePath, buildScriptFilename)
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

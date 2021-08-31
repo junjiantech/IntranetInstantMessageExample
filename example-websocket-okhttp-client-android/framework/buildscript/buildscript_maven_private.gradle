@@ -1,0 +1,37 @@
+
+import top.j3dream.buildsrc.Plugins
+import top.j3dream.buildsrc.constant.Constant
+
+// 增加 maven 打包的 maven
+apply plugin: Plugins.maven
+
+// maven 配置文件所在位置
+def mavenConfigFilePath = "${project.rootDir.absolutePath}/framework/buildconfig/maven.properties"
+
+// 获取 maven 的相关配置
+def mavenConfProps = new Properties()
+def mavenKeyPropsFile = rootProject.file(mavenConfigFilePath)
+if (mavenKeyPropsFile.exists()) {
+    mavenConfProps.load(new FileInputStream(mavenKeyPropsFile))
+} else {
+    println("maven config path not found file: $mavenConfigFilePath")
+}
+
+// 增加上传制品的任务
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenConfProps['mavenArtifactsRepoUrl']) {
+                authentication(
+                        userName: mavenConfProps['mavenArtifactsGradleUsername'],
+                        password: mavenConfProps['mavenArtifactsGradlePassword']
+                )
+            }
+            def projectVersion = project.ext.mavenPkgVersion
+            pom.version = projectVersion == null || projectVersion.toString().length() <= 0? Constant.MODULE_DEF_VERSION_NAME: projectVersion
+            def projectArtifactId = project.ext.mavenPkgArtifactId
+            pom.artifactId = projectArtifactId == null || projectArtifactId.toString().length() <= 0? project.name: projectArtifactId
+            pom.groupId = mavenConfProps['groupId']
+        }
+    }
+}
