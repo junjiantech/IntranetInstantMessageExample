@@ -189,11 +189,12 @@ class MqttClient private constructor() : MqttCallbackExtended, IMqttActionListen
     }
 
     /**
-     * 消息到达时触发
+     * 消息到达时触发。 消息最终在 CommonCallback 中的 deliverMessage 方法中分发.
+     * MqttTopic.isMatched(topicFilter, topicName) 中的行为可以看到 topic 用于不为空. 则这里不能滥用空判断
      * @param topic 话题
      * @param message mqtt message
      */
-    override fun messageArrived(topic: String?, message: MqttMessage?) {
+    override fun messageArrived(topic: String, message: MqttMessage?) {
         Timber.d("来自(%s)的消息: %s", topic, message?.payload?.toString(Charsets.UTF_8))
     }
 
