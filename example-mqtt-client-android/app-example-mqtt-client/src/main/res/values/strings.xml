@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">example-mqtt-client-android</string>
+    <string name="str_hint_mqtt_broker_url">MQTT Broker 地址</string>
+    <string name="str_connect">开始连接</string>
+    <string name="str_disconnect">断开连接</string>
 </resources>

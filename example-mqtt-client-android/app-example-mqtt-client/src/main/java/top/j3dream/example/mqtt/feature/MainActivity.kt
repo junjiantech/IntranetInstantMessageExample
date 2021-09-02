@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import timber.log.Timber
-import top.j3dream.example.mqtt.R
+import top.j3dream.example.mqtt.databinding.ActivityMainBinding
 import top.j3dream.example.mqtt.mqtt.MqttClient
 import top.j3dream.example.mqtt.mqtt.MqttConf
 import top.j3dream.example.mqtt.mqtt.MqttTopic
+import java.util.*
 
 /**
  * - 文件描述: 应用程序活动入口
@@ -17,33 +18,44 @@ import top.j3dream.example.mqtt.mqtt.MqttTopic
  */
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-
-        private const val CONF_TEST_EMQX_SERVER_URL = "tcp://192.168.0.10:1883"
-    }
+    /**
+     * 默认订阅的Topic
+     *
+     * Topic 订阅地址中: '#' 表示匹配多层地址, '+' 表示只匹配一层地址
+     * 如下使用 'testtopic/#' 则会匹配如何主题
+     * - testtopic/A
+     * - testtopic/A/B/C
+     */
+    private val defSubscribeTopic: MutableList<MqttTopic> = arrayListOf(
+        MqttTopic("testtopic/#", 2),
+        MqttTopic("`$`SYS/brokers/+/clients/+/connected", 2)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        // 初始化框架本身
-        initMqttClientFramework()
-        // 发起 Mqtt 连接
-        MqttClient.get().connect()
-    }
-
-    private fun initMqttClientFramework() {
+        // View 绑定.
+        val viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
         // 获取 AndroidId
         Timber.d("[Android ID]: %s", getApplicationAndroidId())
-        // mqtt config
-        val mqttConfig = MqttConf(
-            CONF_TEST_EMQX_SERVER_URL, getApplicationAndroidId(),
-            // 订阅的主题.
-            arrayListOf(MqttTopic("testtopic/#", 2))
-        )
+        // 开始连接
+        viewBinding.btnMainMqttConnect.setOnClickListener {
+            // broker 地址
+            val serverUrl = Objects.toString(viewBinding.etMainMqttServerUrl.text)
+            // mqtt config
+            val mqttConfig = MqttConf(
+                serverUrl, getApplicationAndroidId(), defSubscribeTopic
+            )
+            // 初始化框架
+            MqttClient.get().init(this, mqttConfig)
+            // 开始连接
+            MqttClient.get().connect()
+        }
 
-        // 初始化框架
-        MqttClient.get().init(this, mqttConfig).also {
-            lifecycle.addObserver(it)
+        // 断开连接
+        viewBinding.btnMainMqttDisconnect.setOnClickListener {
+
+            MqttClient.get().disconnect()
         }
     }
 

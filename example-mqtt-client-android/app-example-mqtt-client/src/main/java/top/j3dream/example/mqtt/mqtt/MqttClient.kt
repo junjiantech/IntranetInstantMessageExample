@@ -5,8 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import info.mqtt.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import timber.log.Timber
@@ -98,7 +96,8 @@ class MqttClient private constructor() : MqttCallbackExtended, IMqttActionListen
         context: Context,
         mqttConfig: MqttConf,
         notification: Notification = getDefaultMqttClientNotification(context)
-    ): LifecycleEventObserver {
+    ) {
+
         mMqttAndroidClient =
             MqttAndroidClient(context, mqttConfig.serverUrl, mqttConfig.clientId).apply {
 
@@ -122,15 +121,6 @@ class MqttClient private constructor() : MqttCallbackExtended, IMqttActionListen
 
         // 将 options 中的 topic 添加到项目配置中.
         mMqttSubscribeTopics.addAll(mqttConfig.topics)
-
-        // 当处于 ON_START 的时候注册订阅
-        // 当处于 ON_STOP 的时候解除订阅
-        return LifecycleEventObserver { source, event ->
-            when (event) {
-                Lifecycle.Event.ON_CREATE -> mMqttAndroidClient?.registerResources()
-                Lifecycle.Event.ON_DESTROY -> mMqttAndroidClient?.unregisterResources()
-            }
-        }
     }
 
     /**
@@ -221,9 +211,11 @@ class MqttClient private constructor() : MqttCallbackExtended, IMqttActionListen
      * @param serverURI 服务器地址.
      */
     override fun connectComplete(reconnect: Boolean, serverURI: String?) {
-        /// 当连接是否是首次连接的时候, 应该都需要重新订阅一次话题.
+        /// 当连接是否是首次连接的时候, 应该订阅一次话题.
         if (!reconnect) {
             subscribeDefaultTopic()
+        } else {
+            Timber.d("MQTT 重连完成....")
         }
     }
 

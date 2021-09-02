@@ -4,15 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".feature.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_main_mqtt_server_url"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_main_mqtt_server_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/str_hint_mqtt_broker_url" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_main_mqtt_connect"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/str_connect"
+        app:layout_constraintEnd_toStartOf="@+id/btn_main_mqtt_disconnect"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_main_mqtt_server_url" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_main_mqtt_disconnect"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/str_disconnect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_main_mqtt_connect"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout_main_mqtt_server_url" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
